@@ -1,0 +1,35 @@
+name: Run Python Script
+
+# このワークフローがトリガーされる条件
+on:
+  # 手動実行の場合
+  workflow_dispatch:
+  # リポジトリディスパッチイベント（外部からのAPI呼び出し）をトリガーに設定
+  repository_dispatch:
+    types: [run-python-script]  # 任意のイベント名を設定できます
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      # リポジトリのコードをチェックアウト
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Pythonのセットアップ
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'  # 使用するPythonのバージョン
+
+      # 必要なPythonパッケージをインストール
+      - name: Install dependencies
+        run: |
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      # スクリプトを実行
+      - name: Run Python Script
+        env:
+          GOOGLE_SHEETS_CREDENTIALS: ${{ secrets.GOOGLE_SHEETS_CREDENTIALS }}  # シークレットとして設定された認証情報を渡す
+        run: python your_script.py  # 実行したいスクリプトのパスに変更
