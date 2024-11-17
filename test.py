@@ -1,2 +1,2 @@
 print("Hello, OptTest!")
-print("Hwello, push!")
+print("Hello, push!")
